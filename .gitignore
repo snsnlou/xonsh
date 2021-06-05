@@ -79,4 +79,4 @@ venv/
 .vscode/
 
 # AppImage
-*.AppImage
+*.AppImageroot_key
