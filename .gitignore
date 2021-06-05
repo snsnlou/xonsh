@@ -79,3 +79,4 @@ xonsh/webconfig/js/app.js
 
 # mypy
 .dmypy.json
+root_key

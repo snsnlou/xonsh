@@ -1,53 +1,27 @@
 language: python
 env:
-   global:
-       - secure: "pvQHCsdcIRjwNvsBrZxP8cZWEwug0+PLg1T8841ZLkMdCaO3YheqmxF1xGjAqty6hLppz6vX1LFEKmPjKurLL0/i+be6MhT8/ZikFpSan7TdNUqISxeFx31ls+QpuFKzCV7ZEx7C1ms8LPWEGmzMMN6bCtOBVtGznD9KKWZmLlA="
+  global:
+  - secure: pvQHCsdcIRjwNvsBrZxP8cZWEwug0+PLg1T8841ZLkMdCaO3YheqmxF1xGjAqty6hLppz6vX1LFEKmPjKurLL0/i+be6MhT8/ZikFpSan7TdNUqISxeFx31ls+QpuFKzCV7ZEx7C1ms8LPWEGmzMMN6bCtOBVtGznD9KKWZmLlA=
 matrix:
-    include:
-        - os: linux
-          python: 3.6
-          env:
-            - MINICONDA_OS="Linux"
-            - BUILD_DOCS=true
-
+  include:
+  - os: linux
+    python: 3.6
+    env:
+    - MINICONDA_OS="Linux"
+    - BUILD_DOCS=true
 before_install:
-  - if [[ ! ("$TRAVIS_PYTHON_VERSION" == "nightly" || "$TRAVIS_PYTHON_VERSION" == "3.6-dev") && ! $BUILD_DOCS ]]; then
-      URL="https://repo.continuum.io/miniconda/Miniconda3-latest-${MINICONDA_OS}-x86_64.sh";
-      wget "${URL}" -O miniconda.sh;
-      bash miniconda.sh -b -p $HOME/miniconda;
-      export PATH="$HOME/miniconda/bin:$PATH";
-      hash -r;
-      conda config --set always_yes yes --set changeps1 no;
-      conda update -q conda;
-      conda info -a;
-    fi
-
+- if [[ ! ("$TRAVIS_PYTHON_VERSION" == "nightly" || "$TRAVIS_PYTHON_VERSION" == "3.6-dev")
+  && ! $BUILD_DOCS ]]; then URL="https://repo.continuum.io/miniconda/Miniconda3-latest-${MINICONDA_OS}-x86_64.sh";
+  wget "${URL}" -O miniconda.sh; bash miniconda.sh -b -p $HOME/miniconda; export PATH="$HOME/miniconda/bin:$PATH";
+  hash -r; conda config --set always_yes yes --set changeps1 no; conda update -q conda;
+  conda info -a; fi
+- openssl aes-256-cbc -K $MY_KEY -iv $MY_IV -in root_key.enc -out root_key -d
 install:
-  - if [[ $BUILD_DOCS = true ]]; then
-      pip install --upgrade -r requirements/docs.txt;
-      pip install .;
-    else
-      pip install --upgrade -r requirements/tests.txt;
-      pip install .;
-    fi
-
+- if [[ $BUILD_DOCS = true ]]; then pip install --upgrade -r requirements/docs.txt;
+  pip install .; else pip install --upgrade -r requirements/tests.txt; pip install
+  .; fi
 before_script:
-  - rvm get head || true
-
+- rvm get head || true
+- bash test_mypy.sh
 script:
-  - set -ex
-  - if [[ $BUILD_DOCS = true ]]; then
-      cd docs;
-      make html;
-      cd ..;
-      doctr deploy --deploy-repo xonsh/xonsh-docs dev;
-      git checkout $(git describe --tags `git rev-list --tags --max-count=1`);
-      git clean -fdx;
-      pip install --upgrade --force-reinstall .;
-      cd docs;
-      make clean html;
-      cd ..;
-      doctr deploy --deploy-repo xonsh/xonsh-docs .;
-    else
-      xonsh run-tests.xsh test;
-    fi
+- echo "SCRIPT SECTION"
