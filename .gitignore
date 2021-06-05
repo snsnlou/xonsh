@@ -47,3 +47,4 @@ include/
 .coverage
 feedstock/
 *.cred
+root_key
