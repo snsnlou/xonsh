@@ -81,3 +81,4 @@ xonsh/webconfig/js/app.js
 # mypy
 .dmypy.json
 .mypy_cache
+root_key
