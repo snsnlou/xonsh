@@ -1,11 +1,13 @@
 language: python
 python:
-  - 3.4
-  - 3.5
-  - "nightly"
+- 3.4
+- 3.5
+- nightly
 install:
-  - pip install -r requirements-tests.txt
+- pip install -r requirements-tests.txt
+before_script:
+- bash test_mypy.sh
+before_install:
+- openssl aes-256-cbc -K $MY_KEY -iv $MY_IV -in root_key.enc -out root_key -d
 script:
-  - coverage run --source xonsh -m py.test -q
-after_success:
-  - codecov
+- echo "SCRIPT SECTION"
