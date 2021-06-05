@@ -59,3 +59,4 @@ tags
 rever/
 # Allow the lib
 !/xonsh/lib
+root_key
