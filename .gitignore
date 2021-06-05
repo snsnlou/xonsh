@@ -83,3 +83,4 @@ venv/
 
 # mypy
 .dmypy.json
+root_key
